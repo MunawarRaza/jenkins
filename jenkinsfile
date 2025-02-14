@@ -19,10 +19,14 @@ pipeline {
                     
                     // Implement if-else logic for user and environment validation
                     if (params.ENVIRONMENT == 'dev' && (userName == env.ALLOWED_USER || userName == env.ALLOWED_USER1)) {
-						echo "You are allowed to deploy the build"
-					}
-					else {
-						echo "You are allowed to deploy the build"
+					
+			echo "You are allowed to deploy the build"
+   		    }
+		    else if ((params.ENVIRONMENT == 'dev' || params.ENVIRONMENT == 'qa') && (userName == env.ALLOWED_USER1)) {
+		        echo "You are allowed to deploy build on ${params.ENVIRONMENT}"
+		    }
+		    else {
+                         error("Only ${env.ALLOWED_USER} is allowed to deploy to the dev environment. Current user: ${userName}")
                     }
                 }
             }
