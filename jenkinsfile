@@ -22,7 +22,7 @@ pipeline {
 					
 			echo "You are allowed to deploy the build"
    		    }
-		    else if ((params.ENVIRONMENT == 'dev' || params.ENVIRONMENT == 'qa') && (userName == env.ALLOWED_USER1)) {
+		    else if ((params.ENVIRONMENT == 'dev' || params.ENVIRONMENT == 'qa1') && (userName == env.ALLOWED_USER1)) {
 		        echo "You are allowed to deploy build on ${params.ENVIRONMENT}"
 		    }
 		    else {
