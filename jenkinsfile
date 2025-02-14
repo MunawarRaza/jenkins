@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy (dev, qa, uat)')
+        string(name: 'BRANCH', defaultValue: 'main', description: 'Branch to deploy')
+    }
+    environment {
+        ALLOWED_USER = 'developer'
+        ALLOWED_USER1 = 'munawar'
+    }
+    stages {
+        stage('User Validation') {
+            steps {
+                script {
+                    // Get the triggering user's name
+                    def cause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
+                    def userName = cause?.userId?.toString()?.replaceAll(/\[|\]/, "") ?: "Unknown"
+                    echo "Triggered by user: ${userName}"
+                    
+                    // Implement if-else logic for user and environment validation
+                    if (params.ENVIRONMENT == 'dev' && (userName == env.ALLOWED_USER || userName == env.ALLOWED_USER1)) {
+						echo "You are allowed to deploy the build"
+					}
+					else {
+						echo "You are allowed to deploy the build"
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building for branch: ${params.BRANCH}"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT} environment"
+            }
+        }
+    }
+    post {
+        always {
+            echo "Pipeline execution completed"
+        }
+    }
+}
+
